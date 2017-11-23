@@ -73,7 +73,6 @@ void Inicializa( int *vetor,int tam_vetor,int my_rank, int tamanho){
     }
 }
 
-
 int main(int argc, char** argv){
     int my_rank, proc_n, dado_esquerda, tam_vetor;
     int quantidade, tamanho, porcentagem;
@@ -111,13 +110,14 @@ int main(int argc, char** argv){
     tam_vetor = (tamanho/proc_n);
     // acerta a quantidade do vetor que sera trocado a cada iteração
     quantidade = (int)((porcentagem*tam_vetor)/100);
-    //printf("RANK:%d  quantidade: %d  tam_vetor:%d \n",my_rank, quantidade, tam_vetor);
+    printf("RANK:%d  quantidade: %d  tam_vetor:%d \n",my_rank, quantidade, tam_vetor);
     if(my_rank<proc_n-1){
         vetor_aux = malloc (quantidade*2*sizeof(int));}
     vetor = malloc (tam_vetor*sizeof(int));
     //inicializa cada vetor decrescentemente, sendo que o maior rank pega os menores numeros e assim por diante
     Inicializa (vetor,tam_vetor,my_rank,tamanho); 
 
+    int cont =0;
     t1 = MPI_Wtime();
     while (1)
     {
@@ -168,7 +168,10 @@ int main(int argc, char** argv){
         }
         // todos os nodos menos o zero recebem da esquerda e guardam no começo do seu vetor
         if(my_rank>0)
-            MPI_Recv (&vetor[0], quantidade, MPI_INT,my_rank-1,MPI_ANY_TAG,MPI_COMM_WORLD, &status);    
+            MPI_Recv (&vetor[0], quantidade, MPI_INT,my_rank-1,MPI_ANY_TAG,MPI_COMM_WORLD, &status);   
+        
+        cont++;
+        printf("Contador:%d\n",contador); 
     }
 t2 = MPI_Wtime();
 if(my_rank == 0){
