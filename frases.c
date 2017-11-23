@@ -9,11 +9,11 @@ Augusto Bergamin - augusto.bergamin@acad.pucrs.br
 #include <string.h>
 #include <math.h>
 #include "mpi.h"
-
+// aonde por os tempos, qual  combinação para teste
 
 #define SEND 1
-#define PORCENTAGEM 50
-#define TAMANHO 100000
+//#define PORCENTAGEM 50
+//#define TAMANHO 10000
 
 int *interleaving(int vetor[], int tam)
 {
@@ -35,7 +35,6 @@ int *interleaving(int vetor[], int tam)
 
 	return vetor_auxiliar;
 }
-
 
 void bs(int n, int * vetor)
 {
@@ -65,10 +64,10 @@ void printfv(int *vetor, int tam_vetor){
 }
 
 // Inicializa de forma com que o menor rank fique com os maiores valores
-void Inicializa( int *vetor,int tam_vetor,int my_rank){
+void Inicializa( int *vetor,int tam_vetor,int my_rank, int tamanho){
     int i;
     int proc_n;
-    proc_n = TAMANHO/tam_vetor;
+    proc_n = tamanho/tam_vetor;
     for(i=0;i<tam_vetor;i++){
         vetor[i]=((proc_n-my_rank-1)*tam_vetor)+(tam_vetor-i);
     }
@@ -77,7 +76,7 @@ void Inicializa( int *vetor,int tam_vetor,int my_rank){
 
 int main(int argc, char** argv){
     int my_rank, proc_n, dado_esquerda, tam_vetor;
-    int quantidade;
+    int quantidade, tamanho, porcentagem;
     int *vetor;
     int *vetor_aux;
     int bcast;
@@ -87,15 +86,37 @@ int main(int argc, char** argv){
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &proc_n);
     int bcast_vector[proc_n];
-    tam_vetor = (TAMANHO/proc_n);
+
+    int i;
+	for(i=0; i<argc; i++)
+	{
+		if(!strcmp(argv[i],"-percent"))
+		{
+            porcentagem = atoi(argv[i+1]);
+            //printf("Percent: %d\n",porcentagem);
+			i++;
+		}
+		if(!strcmp(argv[i],"-size"))
+		{
+            tamanho = atoi(argv[i+1]);
+            //printf("tamanho: %d\n",tamanho);
+			i++;
+		}
+        if(!strcmp(argv[i],"-h")){
+            printf("Usage: mpirun -np <NUMBER OF NODES> frases -size <VECTOR SIZE> -percent <VECTOR EXCHANGE PERCENT>\n");
+            exit(1);}
+	}
+
+
+    tam_vetor = (tamanho/proc_n);
     // acerta a quantidade do vetor que sera trocado a cada iteração
-    quantidade = (int)((PORCENTAGEM*tam_vetor)/100);
-    printf("RANK:%d  quantidade: %d  tam_vetor:%d \n",my_rank, quantidade, tam_vetor);
+    quantidade = (int)((porcentagem*tam_vetor)/100);
+    //printf("RANK:%d  quantidade: %d  tam_vetor:%d \n",my_rank, quantidade, tam_vetor);
     if(my_rank<proc_n-1){
         vetor_aux = malloc (quantidade*2*sizeof(int));}
     vetor = malloc (tam_vetor*sizeof(int));
     //inicializa cada vetor decrescentemente, sendo que o maior rank pega os menores numeros e assim por diante
-    Inicializa (vetor,tam_vetor,my_rank); 
+    Inicializa (vetor,tam_vetor,my_rank,tamanho); 
 
     t1 = MPI_Wtime();
     while (1)
@@ -111,7 +132,7 @@ int main(int argc, char** argv){
             MPI_Recv (&dado_esquerda, sizeof(int), MPI_INT,my_rank-1,MPI_ANY_TAG,MPI_COMM_WORLD, &status);}
         
         // realiza broadcast do estado
-        int i,breakk;
+        int breakk;
         for(i=0;i<proc_n;i++){  
             // se for sua vez de transmitir, decide se deve continuar comparando o numero recebido com o seu menor    
             if(i == my_rank){
@@ -150,9 +171,14 @@ int main(int argc, char** argv){
             MPI_Recv (&vetor[0], quantidade, MPI_INT,my_rank-1,MPI_ANY_TAG,MPI_COMM_WORLD, &status);    
     }
 t2 = MPI_Wtime();
+if(my_rank == 0){
+    printfv(vetor,tam_vetor);
+    
+}
 free(vetor);
 free(vetor_aux);
-printf("Run time: %lf\n", t2-t1);
+
 MPI_Finalize();
+printf("Run time: %lf\n", t2-t1);
 return 0;
 }
