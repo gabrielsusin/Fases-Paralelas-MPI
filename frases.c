@@ -110,7 +110,7 @@ int main(int argc, char** argv){
     tam_vetor = (tamanho/proc_n);
     // acerta a quantidade do vetor que sera trocado a cada iteração
     quantidade = (int)((porcentagem*tam_vetor)/100);
-    printf("RANK:%d  quantidade: %d  tam_vetor:%d \n",my_rank, quantidade, tam_vetor);
+    //printf("RANK:%d  quantidade: %d  tam_vetor:%d \n",my_rank, quantidade, tam_vetor);
     if(my_rank<proc_n-1){
         vetor_aux = malloc (quantidade*2*sizeof(int));}
     vetor = malloc (tam_vetor*sizeof(int));
@@ -118,7 +118,8 @@ int main(int argc, char** argv){
     Inicializa (vetor,tam_vetor,my_rank,tamanho); 
 
     int cont =0;
-    t1 = MPI_Wtime();
+    if (my_rank == 0)
+        t1 = MPI_Wtime();
     while (1)
     {
         //ordena o vetor
@@ -171,17 +172,18 @@ int main(int argc, char** argv){
             MPI_Recv (&vetor[0], quantidade, MPI_INT,my_rank-1,MPI_ANY_TAG,MPI_COMM_WORLD, &status);   
         
         cont++;
-        printf("Contador:%d\n",cont); 
+     
     }
+
 t2 = MPI_Wtime();
 if(my_rank == 0){
-    printfv(vetor,tam_vetor);
-    
+    //printfv(vetor,tam_vetor);
+    t2 = MPI_Wtime();
+    printf("Run time: %lf\n", t2-t1);
 }
 //free(vetor);
 //free(vetor_aux);
 
 MPI_Finalize();
-printf("Run time: %lf\n", t2-t1);
 return 0;
 }
