@@ -1,0 +1,74 @@
+Percent 20
+RANK:0  quantidade: 5  tam_vetor:25 
+RANK:2  quantidade: 5  tam_vetor:25 
+RANK:1  quantidade: 5  tam_vetor:25 
+RANK:3  quantidade: 5  tam_vetor:25 
+Contador:1
+Contador:1
+Contador:1
+Contador:1
+Contador:2
+Contador:2
+Contador:2
+Contador:2
+Contador:3
+Contador:3
+Contador:3
+Contador:3
+Contador:4
+Contador:4
+Contador:4
+Contador:4
+Contador:5
+Contador:5
+Contador:5
+Contador:5
+Contador:6
+Contador:6
+Contador:6
+Contador:6
+Contador:7
+Contador:7
+Contador:7
+Contador:8
+Contador:7
+Contador:8
+Contador:8
+Contador:8
+Contador:9
+Contador:9
+Contador:9
+Contador:9
+Contador:10
+Contador:10
+Contador:10
+Contador:10
+0: 1
+1: 2
+2: 3
+3: 4
+4: 5
+5: 6
+6: 7
+7: 8
+8: 9
+9: 10
+10: 11
+11: 12
+12: 13
+13: 14
+14: 15
+15: 16
+16: 17
+17: 18
+18: 19
+19: 20
+20: 21
+21: 22
+22: 23
+23: 24
+24: 25
+Run time: 0.006988
+Run time: 0.007016
+Run time: 0.006839
+Run time: 0.006857

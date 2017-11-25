@@ -171,15 +171,15 @@ int main(int argc, char** argv){
             MPI_Recv (&vetor[0], quantidade, MPI_INT,my_rank-1,MPI_ANY_TAG,MPI_COMM_WORLD, &status);   
         
         cont++;
-        printf("Contador:%d\n",contador); 
+        printf("Contador:%d\n",cont); 
     }
 t2 = MPI_Wtime();
 if(my_rank == 0){
     printfv(vetor,tam_vetor);
     
 }
-free(vetor);
-free(vetor_aux);
+//free(vetor);
+//free(vetor_aux);
 
 MPI_Finalize();
 printf("Run time: %lf\n", t2-t1);
