@@ -1,0 +1,4 @@
+Percent 20
+Percent 10
+Run time: 924.344252
+Percent 30
