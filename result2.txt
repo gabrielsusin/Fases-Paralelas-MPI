@@ -1,0 +1,7 @@
+Percent 20
+Run time: 1103.146785
+Run time: 599.780293
+Run time: 599.577233
+Percent 10
+Run time: 4479.780032
+2 total processes killed (some possibly by mpirun during cleanup)

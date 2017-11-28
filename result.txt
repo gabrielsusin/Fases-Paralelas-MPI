@@ -1,0 +1,4 @@
+Percent 20
+Run time: 4477.835723
+Run time: 3565.853740
+Run time: 2050.422529
