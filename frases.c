@@ -127,11 +127,12 @@ int main(int argc, char** argv){
         
         // manda o maior numero para o nodo a direita
         if(my_rank<proc_n-1){
-            MPI_Send (&vetor[tam_vetor-1], sizeof(int), MPI_INT, my_rank+1, SEND, MPI_COMM_WORLD );}
+            MPI_Send (&vetor[tam_vetor-1],1, MPI_INT, my_rank+1, SEND, MPI_COMM_WORLD );}
         // recebe o maior nodo do numero a esquerda 
         if(my_rank>0){
-            MPI_Recv (&dado_esquerda, sizeof(int), MPI_INT,my_rank-1,MPI_ANY_TAG,MPI_COMM_WORLD, &status);}
-        
+            MPI_Recv (&dado_esquerda, 1, MPI_INT,my_rank-1,MPI_ANY_TAG,MPI_COMM_WORLD, &status);
+            //if(my_rank==1) printf("%d:%d\n",my_rank,dado_esquerda);
+            }
         // realiza broadcast do estado
         int breakk;
         for(i=0;i<proc_n;i++){  
@@ -140,9 +141,10 @@ int main(int argc, char** argv){
                 if(vetor[0]>dado_esquerda) bcast = 0;     
                 else bcast = 1;}  
             //se for sua ver transmite, caso contrario recebe o estado dos outros             
-            MPI_Bcast(&bcast,sizeof(int),MPI_INT,i,MPI_COMM_WORLD);
+            MPI_Bcast(&bcast,1,MPI_INT,i,MPI_COMM_WORLD);
             bcast_vector[i] = bcast;
         }
+        //if(my_rank ==0) printfv(bcast_vector,proc_n);
         // verifica se alguem precisa continuar
         for(i=0;i<proc_n;i++){  
             if (bcast_vector[i] == 1) {breakk = 1;break;}
@@ -154,7 +156,7 @@ int main(int argc, char** argv){
         if(my_rank>0){
             MPI_Send (&vetor[0], quantidade, MPI_INT, my_rank-1, SEND, MPI_COMM_WORLD );
         }
-        //todos os nodos, menos o da direita, recebem a parte do veror da direita e colocam em um vetor auxiliar
+        //todos os nodos, menos o da direita, recebem a parte do vetor da direita e colocam em um vetor auxiliar
         if(my_rank<proc_n-1){
             MPI_Recv (&vetor_aux[quantidade], quantidade, MPI_INT,my_rank+1,MPI_ANY_TAG,MPI_COMM_WORLD, &status);
             // junto do que receberam colocam a maior parte do seu vetor
