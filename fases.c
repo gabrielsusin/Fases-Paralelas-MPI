@@ -173,8 +173,8 @@ int main(int argc, char** argv){
         if(my_rank>0)
             MPI_Recv (&vetor[0], quantidade, MPI_INT,my_rank-1,MPI_ANY_TAG,MPI_COMM_WORLD, &status);   
         
-        cont++;
-     
+        //cont++;
+        //printf("%d\n",cont);
     }
 
 t2 = MPI_Wtime();
